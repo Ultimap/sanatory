@@ -7,3 +7,8 @@ class DoctorScheme(BaseModel):
     experience: int
     specialization_id: int
     user_id: int
+
+
+    
+    
+  

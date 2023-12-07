@@ -69,13 +69,13 @@ class UserService:
     
     async def get_current_user_is_admin(self, token: str) -> User | bool:
         user = await self.get_current_user(token)
-        if user.role_id == 1:
+        if user.role_id <= 1:
             return user
         return False
 
 
     async def get_current_user_is_doctor(self, token: str) -> User | bool:
         user = await self.get_current_user(token)
-        if user.role_id == 2:
+        if user.role_id <= 2:
             return user
         return False

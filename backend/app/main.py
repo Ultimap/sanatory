@@ -1,8 +1,12 @@
 from fastapi import FastAPI
+from fastapi.responses import FileResponse
 from app.models.models import Role
-from app.config import async_session
+from app.config import async_session, img_folder
 from app.routes.user import _user
 from app.routes.specialization import _specialization
+from app.routes.doctor import _doctor
+from app.routes.parent import _parent
+
 
 app = FastAPI()
 
@@ -20,3 +24,10 @@ async def startup_event():
 
 app.include_router(_user)
 app.include_router(_specialization)
+app.include_router(_doctor)
+app.include_router(_parent)
+
+
+@app.get('/api/img/{filename}')
+async def get_file(filename: str):
+    return FileResponse(f'{img_folder}/{filename}')
