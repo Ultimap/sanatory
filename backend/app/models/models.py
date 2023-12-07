@@ -16,7 +16,7 @@ class User(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     username = Column(String, nullable=False, unique=True)
     password = Column(String, nullable=False)
-    role = Column(ForeignKey(Role.id), default=2)
+    role_id = Column(ForeignKey(Role.id))
 
 
 class Specialization(Base):

@@ -14,7 +14,7 @@ class UserService:
         self._repository = repository
         self.__EXPIRATE_TIME = expirate_time
         self.__ALGHORITM = alghorithm
-        self.__SECERT_KEY = secret_key
+        self.__SECRET_KEY = secret_key
 
 
     async def get_user_by_id(self, user_id: int) -> User:
@@ -23,9 +23,12 @@ class UserService:
     
     async def create_user(self, data: UserScheme) -> User | None:
         data.password = pbkdf2_sha512.hash(data.password)
+        data = data.__dict__
+        if not data['role_id']:
+            data['role_id'] = 2
         user = await self._repository.create_user(data)
         if not user:
-            raise HTTPException(status_code=400)
+            raise HTTPException(status_code=400, detail='registration is falled')
         return user
     
     async def _get_user_by_username(self, username: str) -> User:
@@ -38,7 +41,7 @@ class UserService:
     async def _generate_jwt_token(self, data: dict) -> str:
         expirate = datetime.utcnow() + self.__EXPIRATE_TIME
         data.update({'exp': expirate})
-        token = jwt.encode(data, self.__SECERT_KEY, algorithm=self.__ALGHORITM)
+        token = jwt.encode(data, self.__SECRET_KEY, algorithm=self.__ALGHORITM)
         return token
 
     async def login(self, data: UserLogin):
@@ -55,7 +58,7 @@ class UserService:
         except jwt.PyJWTError:
             return None
         
-    async def get_current_user(self, token: str):
+    async def get_current_user(self, token: str) -> User:
         decode_data = await self._verify_token(token)
         if not decode_data:
             raise HTTPException(status_code=400, detail='invalid token')
@@ -63,3 +66,16 @@ class UserService:
         if not user:
             raise HTTPException(status_code=404, detail='user not found')
         return user
+    
+    async def get_current_user_is_admin(self, token: str) -> User | bool:
+        user = await self.get_current_user(token)
+        if user.role_id == 1:
+            return user
+        return False
+
+
+    async def get_current_user_is_doctor(self, token: str) -> User | bool:
+        user = await self.get_current_user(token)
+        if user.role_id == 2:
+            return user
+        return False
