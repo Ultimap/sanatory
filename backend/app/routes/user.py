@@ -1,11 +1,12 @@
 from fastapi import APIRouter, Depends
+from app.models.models import User
 from app.services.user import UserService
 from app.services.doctor import DoctorService
 from app.services.parent import ParentService
 from app.schemas.user import UserScheme, UserLogin, DoctorRigisterScheme, ParentRegistorScheme
 from app.schemas.doctor import DoctorScheme
 from app.schemas.parent import ParentScheme
-from app.depends import get_user_service, get_doctor_serivce, get_parent_service
+from app.depends import get_user_service, get_doctor_serivce, get_parent_service, get_current_user_is_admin
 
 _user = APIRouter(prefix='/api/user', tags=['User'])
 
@@ -13,7 +14,8 @@ _user = APIRouter(prefix='/api/user', tags=['User'])
 @_user.post('/register/doctor', status_code=201)
 async def register_doctor(userdata: UserScheme, doctor_data: DoctorRigisterScheme, 
                    user_service: UserService = Depends(get_user_service),
-                   doctor_serivce: DoctorService = Depends(get_doctor_serivce)
+                   doctor_serivce: DoctorService = Depends(get_doctor_serivce),
+                   admin: User = Depends(get_current_user_is_admin)
                    ):
     user = await user_service.create_user(userdata)
     doctor_data = doctor_data.__dict__
@@ -42,4 +44,4 @@ async def register_user(userdata: UserScheme, parent_data: ParentRegistorScheme,
 @_user.post('/login')
 async def login(data: UserLogin, service: UserService = Depends(get_user_service)):
     token = await service.login(data)
-    return {'access_token': token}
+    return {'access_token': token}  

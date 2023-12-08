@@ -5,7 +5,7 @@ from app.config import async_session
 
 class DoctorRepository:
 
-    async def get_doctor_by_id(self, doctor_id) -> Doctor:
+    async def get_doctor_by_id(self, doctor_id) -> Doctor| None:
         async with async_session() as session:
             doctor = await session.execute(select(Doctor).where(Doctor.id == doctor_id))
             return doctor.scalar_one_or_none()
@@ -25,10 +25,10 @@ class DoctorRepository:
             except:
                 return None
         
-    async def doctor_update_img_by_FML(self, FML: str, filename: str) -> bool | None:
+    async def upload_img(self, doctor_id: str, filename: str) -> bool | None:
         async with async_session() as session:
             try: 
-                await session.execute(update(Doctor).values(img=filename).where(Doctor.FML == FML))
+                await session.execute(update(Doctor).values(img=filename).where(Doctor.id == doctor_id))
                 await session.commit()
                 return True
             except:
@@ -39,5 +39,14 @@ class DoctorRepository:
             try:
                 doctor = await session.execute(select(Doctor).where(Doctor.user_id == user_id))
                 return doctor.scalar_one_or_none()
+            except:
+                return None
+            
+    async def delete_doctor(self, doctor: Doctor) -> bool:
+        async with async_session() as session:
+            try:
+                await session.delete(doctor)
+                await session.commit()
+                return True
             except:
                 return None

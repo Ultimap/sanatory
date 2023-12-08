@@ -70,7 +70,7 @@ class Child(Base):
     FML = Column(String, nullable=False)
     img = Column(String, default='placeholder.png') 
     parent_id = Column(ForeignKey(Parent.id), nullable=False)
-    medcard_id = Column(ForeignKey(Medcard.id), nullable=False, unique=True)
+    medcard_id = Column(ForeignKey(Medcard.id), unique=True)
 
 
 class Diagnosis(Base):

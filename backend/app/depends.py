@@ -10,6 +10,8 @@ from app.repositories.doctor import DoctorRepository
 from app.services.doctor import DoctorService
 from app.repositories.parent import ParentRepository
 from app.services.parent import ParentService
+from app.repositories.child import ChildRepository
+from app.services.child import ChildService
 
 
 async def get_session() -> AsyncSession:
@@ -35,6 +37,13 @@ doctor_service = DoctorService(doctor_repository)
 parent_repository = ParentRepository()
 
 parent_service = ParentService(parent_repository)
+
+
+child_repository = ChildRepository()
+
+child_service = ChildService(child_repository)
+
+
 
 async def get_user_service() -> UserService:
     return user_service
@@ -68,3 +77,7 @@ async def get_doctor_serivce() -> DoctorService:
 
 async def get_parent_service() -> ParentService:
     return parent_service
+
+
+async def get_child_service() -> ChildService:
+    return child_service

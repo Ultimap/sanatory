@@ -5,6 +5,7 @@ from app.services.doctor import DoctorService
 from app.services.specialzation import SpecializationService
 _doctor = APIRouter(prefix='/api/doctor', tags=['Doctor'])
 
+
 @_doctor.get('/')
 async def get_all_doctor(doctor_service: DoctorService = Depends(get_doctor_serivce),
                          spec_serive: SpecializationService = Depends(get_spec_serivce)):
@@ -12,6 +13,7 @@ async def get_all_doctor(doctor_service: DoctorService = Depends(get_doctor_seri
     for doctor in doctors:
         doctor['spacialization'] = await spec_serive.get_specialization_by_id(doctor['spacialization'])
     return doctors
+
 
 @_doctor.get('/{doctor_id}')
 async def get_doctor_by_id(doctor_id: int,
@@ -21,9 +23,17 @@ async def get_doctor_by_id(doctor_id: int,
     doctor['spacialization'] = await spec_serive.get_specialization_by_id(doctor['spacialization'])
     return doctor
 
-@_doctor.put('/add/img')
-async def doctor_update_img(FML: str = Form(...), img: UploadFile = File(...),
+
+@_doctor.put('/{doctor_id}/add/img')
+async def doctor_update_img(doctor_id: int, img: UploadFile = File(...),
                             doctor_service: DoctorService = Depends(get_doctor_serivce),
                             user: User = Depends(get_current_user_is_admin)):
-    await doctor_service.doctor_update_img(FML, img)
+    await doctor_service.upload_img(doctor_id, img)
     return {'message': 'Success'}
+
+@_doctor.delete('/{doctor_id}/delete')
+async def delete_doctor(doctor_id: int,
+                        doctor_serivce: DoctorService = Depends(get_doctor_serivce),
+                        user: User = Depends(get_current_user_is_admin)):
+    await doctor_serivce.delete_doctor(doctor_id)
+    return {'meesage': 'Success'}

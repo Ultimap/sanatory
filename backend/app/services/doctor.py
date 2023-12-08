@@ -41,7 +41,21 @@ class DoctorService:
             )
         return data
     
-    async def doctor_update_img(self, FML: str, img: UploadFile):
-        if not await self._repository.doctor_update_img_by_FML(FML, img.filename):
+    async def upload_img(self, doctor_id: int, img: UploadFile):
+        if not await self._repository.upload_img(doctor_id, img.filename):
             raise HTTPException(status_code=400, detail='upload img is faled')
         await add_img(img)
+
+    async def get_doctor_by_user(self, user_id: int):
+        doctor = await self._repository.get_parent_by_user(user_id)
+        if not doctor:
+            raise HTTPException(status_code=404)
+        return doctor
+    
+    async def delete_doctor(self, doctor_id: int):
+        doctor = await self._repository.get_doctor_by_id(doctor_id)
+        if not doctor:
+            raise HTTPException(status_code=404)
+        result = await self._repository.delete_doctor(doctor)
+        if not result:
+            raise HTTPException(status_code=409, detail='remove doctor is falled')

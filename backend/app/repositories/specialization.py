@@ -23,7 +23,7 @@ class SpecializationRepository:
             except:
                 return None
             
-    async def get_specialization_by_id(self, specialization_id: int) -> Specialization:
+    async def get_specialization_by_id(self, specialization_id: int) -> Specialization | None:
         async with async_session() as session:
             try:
                 specialization = specialization = await session.execute(select(Specialization).where(Specialization.id == specialization_id))

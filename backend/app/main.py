@@ -6,7 +6,7 @@ from app.routes.user import _user
 from app.routes.specialization import _specialization
 from app.routes.doctor import _doctor
 from app.routes.parent import _parent
-
+from app.routes.child import _child
 
 app = FastAPI()
 
@@ -26,6 +26,7 @@ app.include_router(_user)
 app.include_router(_specialization)
 app.include_router(_doctor)
 app.include_router(_parent)
+app.include_router(_child)
 
 
 @app.get('/api/img/{filename}')
