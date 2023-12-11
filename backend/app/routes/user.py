@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Form
 from app.models.models import User
 from app.services.user import UserService
 from app.services.doctor import DoctorService
@@ -42,6 +42,7 @@ async def register_user(userdata: UserScheme, parent_data: ParentRegistorScheme,
 
 
 @_user.post('/login')
-async def login(data: UserLogin, service: UserService = Depends(get_user_service)):
-    token = await service.login(data)
+async def login(username: str = Form(...), password: str = Form(...), 
+                service: UserService = Depends(get_user_service)):
+    token = await service.login(UserLogin(username=username, password=password))
     return {'access_token': token}  

@@ -25,7 +25,7 @@ async def get_doctor_by_id(doctor_id: int,
 
 
 @_doctor.put('/{doctor_id}/add/img')
-async def doctor_update_img(doctor_id: int, img: UploadFile = File(...),
+async def doctor_upload_img(doctor_id: int, img: UploadFile = File(...),
                             doctor_service: DoctorService = Depends(get_doctor_serivce),
                             user: User = Depends(get_current_user_is_admin)):
     await doctor_service.upload_img(doctor_id, img)

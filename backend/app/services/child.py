@@ -8,7 +8,10 @@ class ChildService:
         self._repository = repository
 
     async def get_all_child(self):
-        return await self._repository.get_all_child()
+        child = await self._repository.get_all_child()
+        if not child:
+            raise HTTPException(status_code=404)
+        return child
     
     async def get_child_by_id(self, child_id: int):
         child = await self._repository.get_child_by_id(child_id)
@@ -47,4 +50,15 @@ class ChildService:
         if not result:
             raise HTTPException(status_code=409, detail='remove child is falled')
         
+    async def add_medcard(self, child_id: int, medcard_id: int):
+        child = await self.get_child_by_id(child_id)
+        result = await self._repository.add_medcard(child_id, medcard_id)
+        if not result:
+            raise HTTPException(status_code=400, detail='add medcard for child is falled')
         
+    async def get_child_by_FML(self, FML: str):
+        child = await self._repository.get_child_by_FML(FML)
+        if not child:
+            raise HTTPException(status_code=404)
+        return child
+    

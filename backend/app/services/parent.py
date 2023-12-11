@@ -15,6 +15,8 @@ class ParentService:
     
     async def get_all_parent(self):
         parents = await self._repository.get_all_parent()
+        if not parent:
+            raise HTTPException(status_code=404)
         data = []
         for parent in parents:
             data.append(

@@ -47,3 +47,17 @@ class ChildRepository:
                 return True
             except:
                 return None
+            
+    async def add_medcard(self, child_id: int, medcard_id: int):
+        async with async_session() as session:
+            try: 
+                await session.execute(update(Child).values(medcard_id=medcard_id).where(Child.id == child_id))
+                await session.commit()
+                return True
+            except:
+                return None
+            
+    async def get_child_by_FML(self, FML: str) -> Child:
+        async with async_session() as session:
+            child = await session.execute(select(Child).where(Child.FML == FML))
+            return child.scalar_one_or_none()

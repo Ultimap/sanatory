@@ -13,3 +13,7 @@ class ChildRegisterScheme(BaseModel):
     midle_name: str
     last_name: str
     medcard_id: Optional[int] = None
+
+
+class AddMedcardScheme(BaseModel):
+    medcard_id: int

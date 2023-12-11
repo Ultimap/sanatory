@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, UploadFile, File
 from app.models.models import User
-from app.schemas.child import ChildScheme, ChildRegisterScheme
+from app.schemas.child import ChildScheme, ChildRegisterScheme, AddMedcardScheme
 from app.services.child import ChildService
 from app.services.parent import ParentService
 from app.depends import get_child_service, get_current_user, get_parent_service, get_current_user_is_doctor
@@ -35,7 +35,7 @@ async def get_child_by_me(
                         parent_service: ParentService = Depends(get_parent_service),
                         user: User = Depends(get_current_user)):
     parent = await parent_service.get_parent_by_user(user.id)
-    return await child_service.get_child_by_parent(parent)
+    return await child_service.get_child_by_parent(parent.id)
 
 
 @_child.get('/{child_id}')
@@ -63,4 +63,14 @@ async def delete_child(child_id: int,
                        user: User = Depends(get_current_user)):
     parent = await parent_service.get_parent_by_user(user.id)
     await child_service.delete_child(child_id, parent.id)
+    return {'message': 'Success'}
+
+
+
+@_child.put('/{child_id}/add/medcard')
+async def add_medcard(child_id: int, data: AddMedcardScheme,
+                       child_service: ChildService = Depends(get_child_service),
+                       user: User = Depends(get_current_user_is_doctor)):
+    
+    await child_service.add_medcard(child_id=child_id, medcard_id=data.medcard_id)
     return {'message': 'Success'}
