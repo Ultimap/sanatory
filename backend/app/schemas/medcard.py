@@ -11,3 +11,13 @@ class CreateMedcardScheme(MedcardScheme):
     midle_name: str
     last_name: str
     child_id: Optional[int] = None
+
+
+class CreateMedcardEntriesScheme(BaseModel):
+    title: str
+    description: str
+
+
+class MedcardEntriesScheme(CreateMedcardEntriesScheme):
+    medcard_id: int
+    
