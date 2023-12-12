@@ -17,10 +17,10 @@ class UserRepositories:
             return user.scalar_one_or_none()
     
 
-    async def create_user(self, data: UserScheme) -> User | None:
+    async def create_user(self, data: dict) -> User | None:
         async with session() as db:
             try:
-                user = User(**data.__dict__)
+                user = User(**data)
                 db.add(user)
                 await db.commit()
                 return user

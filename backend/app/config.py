@@ -1,7 +1,6 @@
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
-from datetime import timedelta
 
 async_engine = create_async_engine('sqlite+aiosqlite:///backend.db')
 
@@ -12,3 +11,5 @@ SECRET_KEY = 'asvcxzadsfsa'
 ALGORITH = 'HS256'
 
 oauth2scheme = OAuth2PasswordBearer('/api/user/login')
+
+img_folder = '/img'
