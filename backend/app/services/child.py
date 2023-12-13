@@ -1,4 +1,5 @@
 from fastapi import HTTPException, UploadFile
+from app.models.models import User
 from app.repositories.child import ChildRepository
 from app.schemas.child import ChildScheme
 from app.util.file import add_img
@@ -34,13 +35,15 @@ class ChildService:
             raise HTTPException(status_code=404)
         return child
     
-    async def upload_img(self, child_id: int, img: UploadFile, parent_id: int):
+    async def upload_img(self, child_id: int, img: UploadFile, parent_id: int, user: User):
         child = await self.get_child_by_id(child_id)
-        if child.parent_id != parent_id:
-            raise HTTPException(status_code=403)
+        if user.role_id != 1:
+            if child.parent_id != parent_id:
+                raise HTTPException(status_code=403)
         resul = await self._repository.upload_img(child_id, img.filename)
         if not resul:
             raise HTTPException(status_code=400, detail='upload img if falled')
+        await add_img(img)
     
     async def delete_child(self, child_id: int, parent_id: int):
         child = await self._repository.get_child_by_id(child_id)

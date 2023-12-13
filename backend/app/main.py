@@ -8,10 +8,17 @@ from app.routes.doctor import _doctor
 from app.routes.parent import _parent
 from app.routes.child import _child
 from app.routes.medcrad import _medcard
-
+from starlette.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.on_event("startup")
 async def startup_event():
@@ -32,6 +39,6 @@ app.include_router(_child)
 app.include_router(_medcard)
 
 
-@app.get('/api/img/{filename}')
+@app.get('/api/img/{filename}', status_code=200)
 async def get_file(filename: str):
     return FileResponse(f'{img_folder}/{filename}')

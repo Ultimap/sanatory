@@ -15,7 +15,7 @@ async def create_child(child_data: ChildRegisterScheme,
                        parent_service: ParentService = Depends(get_parent_service),
                        user: User = Depends(get_current_user)):
     child_data = child_data.__dict__
-    child_data['FML'] = f'{child_data.get('first_name')} {child_data.get('midle_name')} {child_data.get('last_name')}'
+    child_data['FML'] = f'{child_data.get("first_name")} {child_data.get("midle_name")} {child_data.get("last_name")}'
     for _ in ('first_name', 'midle_name', 'last_name'):
         del child_data[_]
     parent_data = await parent_service.get_parent_by_user(user.id)
@@ -52,7 +52,7 @@ async def child_upload_img(child_id: int,
                            parent_service: ParentService = Depends(get_parent_service),
                            user: User = Depends(get_current_user)):
     parent = await parent_service.get_parent_by_user(user.id)
-    await child_service.upload_img(child_id, img, parent.id)
+    await child_service.upload_img(child_id, img, parent.id, user)
     return {'message': 'Success'}
 
 

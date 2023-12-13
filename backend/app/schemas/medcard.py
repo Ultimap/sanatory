@@ -7,9 +7,9 @@ class MedcardScheme(BaseModel):
 
 
 class CreateMedcardScheme(MedcardScheme):
-    first_name: str
-    midle_name: str
-    last_name: str
+    first_name: Optional[str] = None
+    midle_name: Optional[str] = None
+    last_name: Optional[str] = None
     child_id: Optional[int] = None
 
 

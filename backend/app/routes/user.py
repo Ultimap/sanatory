@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Form
+from fastapi import APIRouter, Depends, Form, HTTPException
 from app.models.models import User
 from app.services.user import UserService
 from app.services.doctor import DoctorService
@@ -6,7 +6,7 @@ from app.services.parent import ParentService
 from app.schemas.user import UserScheme, UserLogin, DoctorRigisterScheme, ParentRegistorScheme
 from app.schemas.doctor import DoctorScheme
 from app.schemas.parent import ParentScheme
-from app.depends import get_user_service, get_doctor_serivce, get_parent_service, get_current_user_is_admin
+from app.depends import get_user_service, get_doctor_serivce, get_parent_service, get_current_user_is_admin, get_current_user
 
 _user = APIRouter(prefix='/api/user', tags=['User'])
 
@@ -19,7 +19,7 @@ async def register_doctor(userdata: UserScheme, doctor_data: DoctorRigisterSchem
                    ):
     user = await user_service.create_user(userdata)
     doctor_data = doctor_data.__dict__
-    doctor_data['FML'] = f'{doctor_data.get('first_name')} {doctor_data.get('midle_name')} {doctor_data.get('last_name')}'
+    doctor_data['FML'] = f'{doctor_data.get("first_name")} {doctor_data.get("midle_name")} {doctor_data.get("last_name")}'
     for _ in ('first_name', 'midle_name', 'last_name'):
         del doctor_data[_]
     await doctor_serivce.create_doctor(DoctorScheme(**doctor_data, user_id=user.id))
@@ -33,7 +33,7 @@ async def register_user(userdata: UserScheme, parent_data: ParentRegistorScheme,
                    ):
     user = await user_service.create_user(userdata)
     parent_data = parent_data.__dict__
-    parent_data['FML'] = f'{parent_data.get('first_name')} {parent_data.get('midle_name')} {parent_data.get('last_name')}'
+    parent_data['FML'] = f'{parent_data.get("first_name")} {parent_data.get("midle_name")} {parent_data.get("last_name")}'
     for _ in ('first_name', 'midle_name', 'last_name'):
         del parent_data[_]
     await parent_serivce.create_parent(ParentScheme(**parent_data, user_id=user.id))
@@ -46,3 +46,7 @@ async def login(username: str = Form(...), password: str = Form(...),
                 service: UserService = Depends(get_user_service)):
     token = await service.login(UserLogin(username=username, password=password))
     return {'access_token': token}  
+
+@_user.get('/is_admin', status_code=200)
+async def is_admin(user: User = Depends(get_current_user)):
+    return {"is_admin": True if user.role_id == 1 else False}

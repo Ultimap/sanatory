@@ -1,23 +1,22 @@
-import logo from './logo.svg';
 import './App.css';
+import AdminChild from './Components/AdminChild/admin_child.jsx';
+import AdminChilds from './Components/AdminChilds/admin_childs.jsx';
+import AdminHeader from './Components/AdminHeader/admin_header.jsx';
+import { Routes, Route } from 'react-router-dom';
+import Error from './Components/Error/error.jsx';
 
 function App() {
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div style={{display: 'flex'}}>
+      <AdminHeader />
+        <Routes>  
+            <Route  path='/error' Component={Error} />
+            <Route  path='/admin/child' Component={AdminChilds} />
+            <Route  path='/admin/child/:child_id' Component={AdminChild} />
+        </Routes>
+      </div>
     </div>
   );
 }

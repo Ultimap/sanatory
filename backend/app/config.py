@@ -12,4 +12,4 @@ ALGORITH = 'HS256'
 
 oauth2scheme = OAuth2PasswordBearer('/api/user/login')
 
-img_folder = '/img'
+img_folder = 'app/img'

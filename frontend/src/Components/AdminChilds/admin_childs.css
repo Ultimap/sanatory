@@ -1,0 +1,42 @@
+.admin-child-list 
+{
+    display: flex;
+}
+
+
+.admin-child-item 
+{
+    display: flex;
+    margin: 30px;
+    transition: 0.5s all ease;
+}
+
+.admin-child-id
+{
+    font-size: 25px;
+}
+.admin-child-item-content
+{
+    margin-top: 20px;
+    margin-left: -20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0);
+    font-size: 24px;
+    text-align: center;
+    border-radius: 20px 20px 100px 20px;
+}
+
+.admin-child-item-content img
+{
+    object-fit: cover;
+    width: 300px;
+    height: 300px;
+    border-radius: 100px 20px 100px 0px;
+}
+
+.admin-child-item:hover
+{
+    transition: 0.5s all ease;
+    transform: scale(1.05);
+
+}
+
